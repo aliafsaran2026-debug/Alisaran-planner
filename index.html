@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Ali Saran Planner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AS</div>
+        <div>
+          <strong>ALI SARAN</strong>
+          <span>PERSONAL PLANNER</span>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav-btn active" data-page="dashboard">⌂ <span>داشبورد</span></button>
+        <button class="nav-btn" data-page="tasks">✓ <span>کارها</span></button>
+        <button class="nav-btn" data-page="goals">◈ <span>اهداف</span></button>
+        <button class="nav-btn" data-page="habits">↻ <span>عادت‌ها</span></button>
+        <button class="nav-btn" data-page="challenge">90 <span>چالش ۹۰ روزه</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button id="clearData" class="danger-btn">پاک‌سازی اطلاعات</button>
+        <small>v1.0 • Local Storage</small>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button id="menuBtn" class="mobile-menu">☰</button>
+        <div>
+          <p class="eyebrow">PERSONAL SYSTEM</p>
+          <h1 id="pageTitle">داشبورد</h1>
+        </div>
+        <div class="date-box" id="todayDate"></div>
+      </header>
+
+      <section id="dashboard" class="page active">
+        <div class="hero">
+          <div>
+            <span class="eyebrow">TODAY</span>
+            <h2>روزت را آگاهانه بساز.</h2>
+            <p>یک سیستم ساده برای مدیریت زمان، هدف و عادت‌های تو.</p>
+          </div>
+          <div class="hero-number">
+            <span>DAY</span>
+            <strong id="dayNumber">01</strong>
+            <small>از ۹۰</small>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span>کارهای امروز</span><strong id="taskCount">0</strong></div>
+          <div class="stat"><span>انجام‌شده</span><strong id="doneCount">0</strong></div>
+          <div class="stat"><span>اهداف فعال</span><strong id="goalCount">0</strong></div>
+          <div class="stat"><span>عادت‌های امروز</span><strong id="habitDone">0</strong></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h3>کارهای امروز</h3><button class="link-btn" onclick="showPage('tasks')">همه</button></div>
+            <div id="dashboardTasks" class="list"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>عادت‌های امروز</h3><button class="link-btn" onclick="showPage('habits')">مدیریت</button></div>
+            <div id="dashboardHabits" class="list"></div>
+          </div>
+        </div>
+
+        <div class="card progress-card">
+          <div class="card-head"><h3>پیشرفت چالش ۹۰ روزه</h3><strong id="challengePercent">0%</strong></div>
+          <div class="progress"><div id="challengeBar"></div></div>
+          <p id="challengeText" class="muted">هنوز روزی ثبت نشده است.</p>
+        </div>
+      </section>
+
+      <section id="tasks" class="page">
+        <div class="section-head">
+          <div><span class="eyebrow">TASKS</span><h2>کارهای من</h2></div>
+          <button class="primary" onclick="openModal('taskModal')">+ کار جدید</button>
+        </div>
+        <div class="card">
+          <div id="allTasks" class="list"></div>
+        </div>
+      </section>
+
+      <section id="goals" class="page">
+        <div class="section-head">
+          <div><span class="eyebrow">GOALS</span><h2>اهداف</h2></div>
+          <button class="primary" onclick="openModal('goalModal')">+ هدف جدید</button>
+        </div>
+        <div id="allGoals" class="goal-grid"></div>
+      </section>
+
+      <section id="habits" class="page">
+        <div class="section-head">
+          <div><span class="eyebrow">HABITS</span><h2>عادت‌ها</h2></div>
+          <button class="primary" onclick="openModal('habitModal')">+ عادت جدید</button>
+        </div>
+        <div class="card">
+          <div id="allHabits" class="habit-grid"></div>
+        </div>
+      </section>
+
+      <section id="challenge" class="page">
+        <div class="section-head">
+          <div><span class="eyebrow">90 DAYS</span><h2>چالش ۹۰ روزه</h2></div>
+        </div>
+        <div class="card challenge-card">
+          <div class="challenge-top">
+            <div>
+              <span class="muted">روز فعلی</span>
+              <strong id="challengeDayBig">1 / 90</strong>
+            </div>
+            <button id="completeDay" class="primary">✓ ثبت امروز</button>
+          </div>
+          <div class="progress large"><div id="challengeBar2"></div></div>
+          <div id="daysGrid" class="days-grid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Task Modal -->
+  <div id="taskModal" class="modal">
+    <div class="modal-box">
+      <button class="close" onclick="closeModal('taskModal')">×</button>
+      <h2>کار جدید</h2>
+      <input id="taskTitle" placeholder="مثلاً مطالعه ترید">
+      <select id="taskPriority">
+        <option value="low">کم</option><option value="medium" selected>متوسط</option><option value="high">مهم</option>
+      </select>
+      <button class="primary full" onclick="addTask()">افزودن کار</button>
+    </div>
+  </div>
+
+  <!-- Goal Modal -->
+  <div id="goalModal" class="modal">
+    <div class="modal-box">
+      <button class="close" onclick="closeModal('goalModal')">×</button>
+      <h2>هدف جدید</h2>
+      <input id="goalTitle" placeholder="مثلاً ساخت سرمایه">
+      <input id="goalDeadline" type="date">
+      <button class="primary full" onclick="addGoal()">افزودن هدف</button>
+    </div>
+  </div>
+
+  <!-- Habit Modal -->
+  <div id="habitModal" class="modal">
+    <div class="modal-box">
+      <button class="close" onclick="closeModal('habitModal')">×</button>
+      <h2>عادت جدید</h2>
+      <input id="habitTitle" placeholder="مثلاً مطالعه ۳۰ دقیقه">
+      <button class="primary full" onclick="addHabit()">افزودن عادت</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+    }
+  </script>
+</body>
+</html>
